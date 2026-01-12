@@ -39,6 +39,8 @@ app.get('/api/ytmp3', async (req, res) => {
     }
 });
 
-app.listen(2077, () => {
-    console.log('API ligada com sucesso na porta 2077');
+const PORT = process.env.PORT || 2077;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`API ligada com sucesso na porta ${PORT}`);
 });
