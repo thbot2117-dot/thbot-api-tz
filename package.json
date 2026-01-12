@@ -1,7 +1,6 @@
 {
   "name": "thbot-api-tz",
   "version": "1.0.0",
-  "description": "API de Downloads TH",
   "main": "Index.js",
   "scripts": {
     "start": "node Index.js"
