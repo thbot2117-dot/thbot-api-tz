@@ -1,28 +1,44 @@
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
+const yts = require('yt-search');
+const ytdl = require('@distube/ytdl-core');
 
 const app = express();
 app.use(cors());
 
-// Rota de teste
-app.get('/', (req, res) => {
-    res.json({ status: "API Online", dono: "TH" });
-});
-
-// Sua própria rota de YouTube MP3
 app.get('/api/ytmp3', async (req, res) => {
     const { url } = req.query;
-    if (!url) return res.json({ status: false, msg: "Falta a URL" });
-    
+    if (!url) return res.json({ status: false, msg: "Falta o link ou nome" });
+
     try {
-        // Aqui sua API usa um servidor de busca estável
-        const response = await axios.get(`https://api.vreden.my.id/api/ytmp3?url=${url}`);
-        res.json(response.data);
+        let videoUrl = url;
+
+        // Se não for um link, ele pesquisa no YouTube pelo nome
+        if (!ytdl.validateURL(url)) {
+            const search = await yts(url);
+            if (!search.all || search.all.length === 0) {
+                return res.json({ status: false, msg: "Nada encontrado" });
+            }
+            videoUrl = search.all[0].url;
+        }
+
+        const info = await ytdl.getInfo(videoUrl);
+        const format = ytdl.chooseFormat(info.formats, { filter: 'audioonly', quality: 'highestaudio' });
+
+        res.json({
+            status: true,
+            result: {
+                title: info.videoDetails.title,
+                thumb: info.videoDetails.thumbnails[0].url,
+                download: format.url
+            }
+        });
+
     } catch (e) {
         res.status(500).json({ status: false, erro: e.message });
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(10000, () => {
+    console.log('API ligada com sucesso na porta 10000');
+});
