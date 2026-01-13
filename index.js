@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const yts = require('yt-search');
-const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-cors');
 
 const app = express();
 app.use(cors());
