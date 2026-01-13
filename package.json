@@ -1,7 +1,6 @@
 {
-  "name": "minha-api",
+  "name": "api-yt-download",
   "version": "1.0.0",
-  "description": "Minha API Particular",
   "main": "index.js",
   "dependencies": {
     "express": "^4.18.2",
